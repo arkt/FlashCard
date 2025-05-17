@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>九九フラッシュカードアプリ</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            flex: 1;
+        }
+        h1 {
+            color: #4169e1;
+            margin-bottom: 20px;
+        }
+        .card {
+            background-color: #4169e1;
+            color: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px 0;
+            font-size: 32px;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .score {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .progress {
+            margin-bottom: 20px;
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #4caf50;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .answer-input {
+            font-size: 24px;
+            padding: 10px;
+            width: 100px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            margin: 10px auto;
+            display: block;
+        }
+        .answer-input:focus {
+            outline: none;
+            border-color: #4169e1;
+        }
+        .button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            font-size: 24px;
+            margin: 10px 0;
+            height: 30px;
+        }
+        .correct {
+            color: #4caf50;
+        }
+        .incorrect {
+            color: #f44336;
+        }
+        .question-count {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .stats {
+            margin-top: 20px;
+            display: none;
+        }
+        .reaction {
+            font-size: 60px;
+            margin: 10px 0;
+            animation: bounce 0.5s;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>九九フラッシュカード</h1>
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="score">正解: <span id="correctCount">0</span> / 不正解: <span id="incorrectCount">0</span></div>
+        
+        <div id="game-area">
+            <div class="card" id="questionCard">
+                <span id="question"></span>
+                <div class="question-count">問題 <span id="currentQuestion">1</span>/10</div>
+            </div>
+            
+            <input type="number" class="answer-input" id="answerInput" placeholder="答え">
+            <div class="result" id="result"></div>
+            <div class="reaction" id="reaction"></div>
+            
+            <button class="button" id="checkButton">答えを確認</button>
+            <button class="button" id="nextButton" style="display: none;">次へ</button>
+        </div>
+        
+        <div class="stats" id="statsArea">
+            <h2>結果</h2>
+            <p>10問中 <span id="finalCorrect">0</span> 問正解!</p>
+            <div class="reaction" id="finalReaction"></div>
+            <button class="button" id="restartButton">もう一度チャレンジ</button>
+        </div>
+    </div>
+
+    <script>
+        // ゲームのステート
+        const gameState = {
+            currentQuestion: 1,
+            totalQuestions: 10,
+            correctCount: 0,
+            incorrectCount: 0,
+            currentAnswer: null,
+            hasAnswered: false
+        };
+
+        // DOM要素
+        const questionElement = document.getElementById('question');
+        const answerInput = document.getElementById('answerInput');
+        const resultElement = document.getElementById('result');
+        const reactionElement = document.getElementById('reaction');
+        const correctCountElement = document.getElementById('correctCount');
+        const incorrectCountElement = document.getElementById('incorrectCount');
+        const currentQuestionElement = document.getElementById('currentQuestion');
+        const progressBar = document.getElementById('progressBar');
+        const checkButton = document.getElementById('checkButton');
+        const nextButton = document.getElementById('nextButton');
+        const gameArea = document.getElementById('game-area');
+        const statsArea = document.getElementById('statsArea');
+        const finalCorrectElement = document.getElementById('finalCorrect');
+        const finalReactionElement = document.getElementById('finalReaction');
+        const restartButton = document.getElementById('restartButton');
+
+        // 新しい問題を生成
+        function generateQuestion() {
+            const num1 = Math.floor(Math.random() * 9) + 1;
+            const num2 = Math.floor(Math.random() * 9) + 1;
+            const answer = num1 * num2;
+            
+            questionElement.textContent = `${num1} × ${num2} = ?`;
+            gameState.currentAnswer = answer;
+            gameState.hasAnswered = false;
+            
+            // UI更新
+            answerInput.value = '';
+            answerInput.disabled = false;
+            resultElement.textContent = '';
+            resultElement.className = 'result';
+            reactionElement.textContent = '';
+            checkButton.style.display = 'inline-block';
+            nextButton.style.display = 'none';
+            
+            // 進捗更新
+            currentQuestionElement.textContent = gameState.currentQuestion;
+            updateProgressBar();
+            
+            // 入力フォーカス
+            answerInput.focus();
+        }
+
+        // 進捗バーの更新
+        function updateProgressBar() {
+            const progress = ((gameState.currentQuestion - 1) / gameState.totalQuestions) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        // 答えをチェック
+        function checkAnswer() {
+            if (gameState.hasAnswered) return;
+            
+            const userAnswer = parseInt(answerInput.value);
+            
+            if (isNaN(userAnswer)) {
+                alert('数字を入力してください');
+                return;
+            }
+            
+            gameState.hasAnswered = true;
+            answerInput.disabled = true;
+            
+            if (userAnswer === gameState.currentAnswer) {
+                resultElement.textContent = '正解!';
+                resultElement.className = 'result correct';
+                reactionElement.textContent = '😄';
+                gameState.correctCount++;
+                correctCountElement.textContent = gameState.correctCount;
+            } else {
+                resultElement.textContent = `不正解! 正解は ${gameState.currentAnswer} です`;
+                resultElement.className = 'result incorrect';
+                reactionElement.textContent = '😢';
+                gameState.incorrectCount++;
+                incorrectCountElement.textContent = gameState.incorrectCount;
+            }
+            
+            checkButton.style.display = 'none';
+            
+            if (gameState.currentQuestion < gameState.totalQuestions) {
+                nextButton.style.display = 'inline-block';
+            } else {
+                // ゲーム終了
+                setTimeout(showFinalStats, 1000);
+            }
+        }
+
+        // 次の問題に進む
+        function nextQuestion() {
+            gameState.currentQuestion++;
+            generateQuestion();
+        }
+
+        // 最終結果の表示
+        function showFinalStats() {
+            gameArea.style.display = 'none';
+            statsArea.style.display = 'block';
+            
+            finalCorrectElement.textContent = gameState.correctCount;
+            
+            // 最終的な反応
+            if (gameState.correctCount === gameState.totalQuestions) {
+                finalReactionElement.textContent = '🏆';
+            } else if (gameState.correctCount >= 7) {
+                finalReactionElement.textContent = '🎉';
+            } else if (gameState.correctCount >= 5) {
+                finalReactionElement.textContent = '👍';
+            } else {
+                finalReactionElement.textContent = '💪';
+            }
+        }
+
+        // ゲームをリスタート
+        function restartGame() {
+            gameState.currentQuestion = 1;
+            gameState.correctCount = 0;
+            gameState.incorrectCount = 0;
+            
+            correctCountElement.textContent = '0';
+            incorrectCountElement.textContent = '0';
+            
+            gameArea.style.display = 'block';
+            statsArea.style.display = 'none';
+            
+            generateQuestion();
+        }
+
+        // イベントリスナー
+        checkButton.addEventListener('click', checkAnswer);
+        nextButton.addEventListener('click', nextQuestion);
+        restartButton.addEventListener('click', restartGame);
+        
+        // エンターキーで回答
+        answerInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        // ゲーム開始
+        generateQuestion();
+    </script>
+</body>
+</html>

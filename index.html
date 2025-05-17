@@ -2,459 +2,94 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>二桁計算フラッシュカード</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>算数練習アプリ</title>
     <style>
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f9f9f9;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #f0f8ff;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            align-items: center;
             min-height: 100vh;
-            text-align: center;
         }
-        
         .container {
-            width: 90%;
-            max-width: 500px;
-            margin: 20px auto;
-            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
             background-color: white;
-            border-radius: 12px;
+            border-radius: 10px;
+            padding: 40px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            flex: 1;
         }
-        
         h1 {
-            color: #2c3e50;
-            font-size: 24px;
-            margin-bottom: 20px;
+            color: #4169e1;
+            margin-bottom: 30px;
+            font-size: 2.5em;
         }
-        
-        .problem-card {
-            background-color: #f1c40f;
-            padding: 30px 20px;
-            border-radius: 8px;
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        .subtitle {
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.2em;
         }
-        
-        .answer-section {
-            margin-bottom: 20px;
-        }
-        
-        input[type="number"] {
-            width: 120px;
-            height: 50px;
-            font-size: 24px;
-            text-align: center;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            padding: 5px;
-            margin: 10px 0;
-        }
-        
-        input[type="number"]:focus {
-            border-color: #3498db;
-            outline: none;
-        }
-        
-        button {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 18px;
-            border-radius: 8px;
-            cursor: pointer;
-            margin: 5px;
-            transition: background-color 0.3s;
-        }
-        
-        button:hover {
-            background-color: #2980b9;
-        }
-        
-        .next-btn {
-            background-color: #2ecc71;
-        }
-        
-        .next-btn:hover {
-            background-color: #27ae60;
-        }
-        
-        .feedback {
-            font-size: 20px;
-            margin: 15px 0;
-            min-height: 30px;
-        }
-        
-        .correct {
-            color: #2ecc71;
-        }
-        
-        .incorrect {
-            color: #e74c3c;
-        }
-        
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            background-color: #ecf0f1;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-        
-        .stat-box {
-            font-size: 16px;
-        }
-        
-        .stat-box span {
-            font-weight: bold;
-            font-size: 20px;
-        }
-        
-        .operation-switch {
-            margin: 20px 0;
-        }
-        
-        .operation-label {
-            margin: 0 10px;
-            font-weight: bold;
-        }
-        
-        .question-counter {
-            background-color: #34495e;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            display: inline-block;
-        }
-        
-        .finish-btn {
-            background-color: #e74c3c;
-        }
-        
-        .finish-btn:hover {
-            background-color: #c0392b;
-        }
-        
-        /* モーダルスタイル */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
+        .app-menu {
             display: flex;
             justify-content: center;
-            align-items: center;
-            z-index: 1000;
+            gap: 30px;
+            margin-top: 50px;
         }
-        
-        .modal-content {
+        .app-card {
             background-color: white;
-            padding: 30px;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            width: 280px;
+            padding: 20px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: inherit;
         }
-        
-        .result-summary {
-            margin: 20px 0;
-            font-size: 18px;
-            line-height: 1.6;
+        .app-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
         }
-        
-        .result-summary p {
-            margin: 10px 0;
+        .app-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
         }
-        
-        .hidden {
-            display: none !important;
+        .app-title {
+            font-size: 24px;
+            color: #4169e1;
+            margin-bottom: 15px;
         }
-        
-        /* iPhoneでのフォームズーム防止 */
-        @media screen and (max-width: 768px) {
-            input[type="number"] {
-                font-size: 16px;
-            }
+        .app-description {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.5;
         }
-        
-        /* iPhoneに適した要素サイズ */
-        @media screen and (max-width: 480px) {
-            .problem-card {
-                font-size: 28px;
-                padding: 20px 15px;
-            }
-            
-            button {
-                padding: 10px 20px;
-                font-size: 16px;
-            }
+        .footer {
+            margin-top: 50px;
+            color: #888;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>二桁計算フラッシュカード</h1>
-        
-        <div class="operation-switch">
-            <label class="operation-label">
-                <input type="radio" name="operation" value="addition" checked> たし算
-            </label>
-            <label class="operation-label">
-                <input type="radio" name="operation" value="subtraction"> ひき算
-            </label>
-            <label class="operation-label">
-                <input type="radio" name="operation" value="mixed"> まぜこぜ
-            </label>
-        </div>
-        
-        <div class="question-counter" id="question-counter">第 1 問</div>
-        
-        <div class="problem-card" id="problem">
-            <!-- ここに問題が表示されます -->
-        </div>
-        
-        <div class="answer-section">
-            <input type="number" id="answer-input" placeholder="こたえ" min="0" max="999">
-            <div>
-                <button id="check-btn">かくにん</button>
-                <button id="next-btn" class="next-btn hidden">つぎの問題</button>
-                <button id="finish-btn" class="finish-btn">おわる</button>
-            </div>
-        </div>
-        
-        <div class="feedback" id="feedback">
-            <!-- ここに正解・不正解のフィードバックが表示されます -->
-        </div>
-        
-        <div class="stats">
-            <div class="stat-box">正解: <span id="correct-count">0</span></div>
-            <div class="stat-box">不正解: <span id="incorrect-count">0</span></div>
-            <div class="stat-box">挑戦数: <span id="total-count">0</span></div>
+        <h1>算数練習アプリ</h1>
+
+        <div class="app-menu">
+            <a href="AddSub.html" class="app-card">
+                <div class="app-icon">➕➖</div>
+                <h2 class="app-title">たし算・ひき算</h2>
+            </a>
+
+            <a href="MultipleTable.html" class="app-card">
+                <div class="app-icon">✖️</div>
+                <h2 class="app-title">九九の練習</h2>
+            </a>
         </div>
     </div>
-    
-    <!-- 終了モーダル -->
-    <div id="finish-modal" class="modal hidden">
-        <div class="modal-content">
-            <h2>おつかれさま！</h2>
-            <div class="result-summary">
-                <p>チャレンジした問題: <span id="summary-total">0</span>問</p>
-                <p>正解: <span id="summary-correct">0</span>問</p>
-                <p>正解率: <span id="summary-percentage">0</span>%</p>
-            </div>
-            <button id="restart-btn">もういちど</button>
-        </div>
-    </div>
-    
-    <script>
-        // 状態を管理する変数
-        let currentProblem = {};
-        let correctCount = 0;
-        let incorrectCount = 0;
-        let questionNumber = 1;
-        let isAnswerChecked = false;
-        
-        // 要素への参照
-        const problemElement = document.getElementById('problem');
-        const answerInput = document.getElementById('answer-input');
-        const checkButton = document.getElementById('check-btn');
-        const nextButton = document.getElementById('next-btn');
-        const finishButton = document.getElementById('finish-btn');
-        const feedbackElement = document.getElementById('feedback');
-        const correctCountElement = document.getElementById('correct-count');
-        const incorrectCountElement = document.getElementById('incorrect-count');
-        const totalCountElement = document.getElementById('total-count');
-        const operationRadios = document.getElementsByName('operation');
-        const questionCounterElement = document.getElementById('question-counter');
-        const finishModal = document.getElementById('finish-modal');
-        const restartButton = document.getElementById('restart-btn');
-        const summaryTotal = document.getElementById('summary-total');
-        const summaryCorrect = document.getElementById('summary-correct');
-        const summaryPercentage = document.getElementById('summary-percentage');
-        
-        // 問題を生成する関数
-        function generateProblem() {
-            // 選択された演算（足し算、引き算、混合）を取得
-            let selectedOperation = 'addition';
-            for (const radio of operationRadios) {
-                if (radio.checked) {
-                    selectedOperation = radio.value;
-                    break;
-                }
-            }
-            
-            // 演算タイプを決定
-            let operationType;
-            if (selectedOperation === 'mixed') {
-                operationType = Math.random() < 0.5 ? 'addition' : 'subtraction';
-            } else {
-                operationType = selectedOperation;
-            }
-            
-            if (operationType === 'addition') {
-                // 足し算の問題を生成
-                const num1 = Math.floor(Math.random() * 90) + 10; // 10-99
-                const num2 = Math.floor(Math.random() * 90) + 10; // 10-99
-                currentProblem = {
-                    num1,
-                    num2,
-                    operator: '+',
-                    answer: num1 + num2
-                };
-            } else {
-                // 引き算の問題を生成（負の数は出さない）
-                const num2 = Math.floor(Math.random() * 90) + 10; // 10-99
-                // num1 > num2 になるようにする
-                const num1 = num2 + Math.floor(Math.random() * 90) + 10; // num2 + (10-99)
-                currentProblem = {
-                    num1,
-                    num2,
-                    operator: '-',
-                    answer: num1 - num2
-                };
-            }
-            
-            // 問題を表示
-            problemElement.textContent = `${currentProblem.num1} ${currentProblem.operator} ${currentProblem.num2} = ?`;
-            
-            // 問題番号を表示
-            questionCounterElement.textContent = `第 ${questionNumber} 問`;
-            
-            // UIをリセット
-            answerInput.value = '';
-            answerInput.focus();
-            feedbackElement.textContent = '';
-            feedbackElement.className = 'feedback';
-            checkButton.classList.remove('hidden');
-            nextButton.classList.add('hidden');
-            isAnswerChecked = false;
-        }
-        
-        // 答えをチェックする関数
-        function checkAnswer() {
-            if (isAnswerChecked) return;
-            
-            const userAnswer = parseInt(answerInput.value);
-            
-            if (isNaN(userAnswer)) {
-                feedbackElement.textContent = 'こたえを入力してください';
-                feedbackElement.className = 'feedback';
-                return;
-            }
-            
-            // 挑戦数を増やす
-            const totalCount = correctCount + incorrectCount + 1;
-            totalCountElement.textContent = totalCount;
-            
-            if (userAnswer === currentProblem.answer) {
-                feedbackElement.textContent = '⭕ せいかい！';
-                feedbackElement.className = 'feedback correct';
-                correctCount++;
-                correctCountElement.textContent = correctCount;
-            } else {
-                feedbackElement.textContent = `❌ ちがうよ。こたえは ${currentProblem.answer} です。`;
-                feedbackElement.className = 'feedback incorrect';
-                incorrectCount++;
-                incorrectCountElement.textContent = incorrectCount;
-            }
-            
-            isAnswerChecked = true;
-            checkButton.classList.add('hidden');
-            nextButton.classList.remove('hidden');
-        }
-        
-        // 次の問題に進む関数
-        function nextQuestion() {
-            questionNumber++;
-            generateProblem();
-        }
-        
-        // 終了処理を行う関数
-        function finishQuiz() {
-            const totalCount = correctCount + incorrectCount;
-            const percentage = totalCount > 0 ? Math.round((correctCount / totalCount) * 100) : 0;
-            
-            // 結果サマリーを更新
-            summaryTotal.textContent = totalCount;
-            summaryCorrect.textContent = correctCount;
-            summaryPercentage.textContent = percentage;
-            
-            // モーダルを表示
-            finishModal.classList.remove('hidden');
-        }
-        
-        // ゲームをリスタートする関数
-        function restartQuiz() {
-            // 状態をリセット
-            correctCount = 0;
-            incorrectCount = 0;
-            questionNumber = 1;
-            
-            // カウンターをリセット
-            correctCountElement.textContent = '0';
-            incorrectCountElement.textContent = '0';
-            totalCountElement.textContent = '0';
-            
-            // モーダルを非表示
-            finishModal.classList.add('hidden');
-            
-            // 新しい問題を生成
-            generateProblem();
-        }
-        
-        // キーボードの Enter キーでの送信を有効化
-        answerInput.addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                if (!isAnswerChecked) {
-                    checkAnswer();
-                } else {
-                    nextQuestion();
-                }
-            }
-        });
-        
-        // ボタンのイベントリスナー
-        checkButton.addEventListener('click', checkAnswer);
-        nextButton.addEventListener('click', nextQuestion);
-        finishButton.addEventListener('click', finishQuiz);
-        restartButton.addEventListener('click', restartQuiz);
-        
-        // 演算選択が変更されたら新しい問題を生成
-        for (const radio of operationRadios) {
-            radio.addEventListener('change', generateProblem);
-        }
-        
-        // 初期問題を生成
-        generateProblem();
-        
-        // iOSのバーチャルキーボードの挙動対策
-        function adjustViewForKeyboard() {
-            // 少し待ってからスクロール
-            setTimeout(() => {
-                window.scrollTo(0, 0);
-                document.body.scrollTop = 0;
-            }, 300);
-        }
-        
-        answerInput.addEventListener('focus', adjustViewForKeyboard);
-        
-        // iOS上でPWAとして動作する際に役立つスクロール調整
-        window.addEventListener('resize', adjustViewForKeyboard);
-    </script>
 </body>
 </html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>九九暗記アプリ</title>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f8ff;
+            text-align: center;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+        }
+        h1 {
+            color: #4169e1;
+            margin-bottom: 1.5rem;
+        }
+        .controls {
+            margin-bottom: 2rem;
+        }
+        select, button {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin: 0 0.5rem;
+        }
+        button {
+            background-color: #4169e1;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #3151b5;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .display {
+            font-size: 3rem;
+            margin: 2rem 0;
+            height: 5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .progress {
+            margin-top: 1rem;
+            width: 100%;
+            height: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #4caf50;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+        .info {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>九九暗記アプリ</h1>
+        
+        <div class="controls">
+            <select id="table-select">
+                <option value="1">1の段</option>
+                <option value="2">2の段</option>
+                <option value="3">3の段</option>
+                <option value="4">4の段</option>
+                <option value="5">5の段</option>
+                <option value="6">6の段</option>
+                <option value="7">7の段</option>
+                <option value="8">8の段</option>
+                <option value="9">9の段</option>
+            </select>
+            <button id="start-btn">開始</button>
+            <button id="stop-btn" disabled>停止</button>
+        </div>
+        
+        <div class="display" id="display">ここに表示されます</div>
+        
+        <div class="progress">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        
+        <div class="info" id="info">
+            「開始」を押すと、選択した段の九九が順番に表示されます。
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tableSelect = document.getElementById('table-select');
+            const startBtn = document.getElementById('start-btn');
+            const stopBtn = document.getElementById('stop-btn');
+            const display = document.getElementById('display');
+            const progressBar = document.getElementById('progress-bar');
+            const info = document.getElementById('info');
+            
+            let interval;
+            let currentNumber = 1;
+            let selectedTable = 1;
+            
+            // 開始ボタンのクリックイベント
+            startBtn.addEventListener('click', function() {
+                selectedTable = parseInt(tableSelect.value);
+                currentNumber = 1;
+                startDisplay();
+                
+                // ボタンの有効/無効を切り替え
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+                tableSelect.disabled = true;
+                
+                info.textContent = `${selectedTable}の段を表示中...`;
+            });
+            
+            // 停止ボタンのクリックイベント
+            stopBtn.addEventListener('click', function() {
+                stopDisplay();
+                
+                // ボタンの有効/無効を切り替え
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+                tableSelect.disabled = false;
+                
+                info.textContent = '「開始」を押すと、選択した段の九九が順番に表示されます。';
+            });
+            
+            // 表示を開始する
+            function startDisplay() {
+                // 最初の計算を表示
+                showCurrentCalculation();
+                
+                // 3秒ごとに次の計算を表示
+                interval = setInterval(function() {
+                    currentNumber++;
+                    
+                    if (currentNumber > 9) {
+                        // 9まで表示したら停止
+                        stopDisplay();
+                        display.textContent = `${selectedTable}の段 完了!`;
+                        progressBar.style.width = '100%';
+                        
+                        // ボタンの有効/無効を切り替え
+                        startBtn.disabled = false;
+                        stopBtn.disabled = true;
+                        tableSelect.disabled = false;
+                        
+                        info.textContent = '「開始」を押すと、選択した段の九九が順番に表示されます。';
+                        return;
+                    }
+                    
+                    showCurrentCalculation();
+                }, 3000);
+            }
+            
+            // 現在の計算を表示
+            function showCurrentCalculation() {
+                const result = selectedTable * currentNumber;
+                display.textContent = `${selectedTable} × ${currentNumber} = ${result}`;
+                
+                // プログレスバーを更新
+                const progress = (currentNumber / 9) * 100;
+                progressBar.style.width = `${progress}%`;
+            }
+            
+            // 表示を停止
+            function stopDisplay() {
+                clearInterval(interval);
+            }
+        });
+    </script>
+</body>
+</html>

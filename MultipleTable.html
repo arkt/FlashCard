@@ -362,13 +362,11 @@
             if (userAnswer === gameState.currentAnswer) {
                 resultElement.textContent = '⭕ せいかい！';
                 resultElement.className = 'result correct';
-                reactionElement.textContent = '😄';
                 gameState.correctCount++;
                 correctCountElement.textContent = gameState.correctCount;
             } else {
-                resultElement.textContent = `❌ ちがうよ。こたえは ${gameState.currentAnswer} です`;
+                resultElement.textContent = `❌ ちがうよ。こたえは ${gameState.currentAnswer} だよ。`;
                 resultElement.className = 'result incorrect';
-                reactionElement.textContent = '😢';
                 gameState.incorrectCount++;
                 incorrectCountElement.textContent = gameState.incorrectCount;
             }

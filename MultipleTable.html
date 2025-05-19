@@ -2,128 +2,256 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>九九フラッシュカードアプリ</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            text-align: center;
-            background-color: #f0f8ff;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f9f9f9;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
-            background-color: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            flex: 1;
-        }
-        h1 {
-            color: #4169e1;
-            margin-bottom: 20px;
-        }
-        .card {
-            background-color: #4169e1;
-            color: white;
-            border-radius: 10px;
-            padding: 30px;
-            margin: 20px 0;
-            font-size: 32px;
-            height: 150px;
-            display: flex;
             align-items: center;
-            justify-content: center;
-            position: relative;
+            min-height: 100vh;
+            text-align: center;
         }
-        .score {
-            font-size: 18px;
+        
+        .container {
+            width: 90%;
+            max-width: 500px;
+            margin: 10px auto;
+            padding: 15px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            /* iPhone向けに縦の表示幅を50%に調整 */
+            height: 50vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 20px;
             margin-bottom: 10px;
         }
+        
+        /* ホームに戻るリンク */
+        .home-link {
+            display: block;
+            margin: 10px 0;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .home-link:hover {
+            text-decoration: underline;
+        }
+        
         .progress {
-            margin-bottom: 20px;
-            height: 20px;
+            margin-bottom: 10px;
+            height: 15px;
             background-color: #e0e0e0;
             border-radius: 10px;
             overflow: hidden;
         }
+        
         .progress-bar {
             height: 100%;
             background-color: #4caf50;
             width: 0%;
             transition: width 0.3s;
         }
+        
+        .score {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .card {
+            background-color: #f1c40f;
+            color: #2c3e50;
+            border-radius: 8px;
+            padding: 20px 15px;
+            margin: 10px 0;
+            font-size: 28px;
+            font-weight: bold;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .question-count {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 12px;
+            color: rgba(0, 0, 0, 0.6);
+            background-color: #34495e;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+        }
+        
         .answer-input {
-            font-size: 24px;
-            padding: 10px;
             width: 100px;
-            border: 2px solid #ccc;
-            border-radius: 5px;
+            height: 40px;
+            font-size: 20px;
             text-align: center;
-            margin: 10px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 5px;
+            margin: 8px auto;
             display: block;
         }
+        
         .answer-input:focus {
+            border-color: #3498db;
             outline: none;
-            border-color: #4169e1;
         }
+        
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
         .button {
-            background-color: #4caf50;
+            background-color: #3498db;
             color: white;
             border: none;
             padding: 10px 20px;
-            font-size: 18px;
-            border-radius: 5px;
+            font-size: 16px;
+            border-radius: 8px;
             cursor: pointer;
-            margin: 10px 5px;
+            margin: 5px;
+            transition: background-color 0.3s;
         }
+        
         .button:hover {
-            background-color: #45a049;
+            background-color: #2980b9;
         }
+        
+        #nextButton {
+            background-color: #2ecc71;
+        }
+        
+        #nextButton:hover {
+            background-color: #27ae60;
+        }
+        
         .result {
-            font-size: 24px;
+            font-size: 18px;
             margin: 10px 0;
-            height: 30px;
+            min-height: 25px;
         }
+        
         .correct {
-            color: #4caf50;
+            color: #2ecc71;
         }
+        
         .incorrect {
-            color: #f44336;
+            color: #e74c3c;
         }
-        .question-count {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-        }
-        .stats {
-            margin-top: 20px;
-            display: none;
-        }
+        
         .reaction {
-            font-size: 60px;
-            margin: 10px 0;
+            font-size: 40px;
+            margin: 5px 0;
             animation: bounce 0.5s;
         }
+        
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
+            50% { transform: translateY(-10px); }
         }
-        .hidden {
+        
+        .stats {
+            margin-top: 15px;
             display: none;
+            text-align: center;
+        }
+        
+        .stats h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        /* モーダルスタイル */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 350px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* iPhoneでのフォームズーム防止 */
+        @media screen and (max-width: 768px) {
+            input[type="number"] {
+                font-size: 16px;
+            }
+            
+            .container {
+                height: 50vh;
+                padding: 10px;
+            }
+        }
+        
+        /* iPhoneに適した要素サイズ */
+        @media screen and (max-width: 480px) {
+            .card {
+                font-size: 24px;
+                padding: 15px 10px;
+            }
+            
+            .button {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+            
+            h1 {
+                font-size: 18px;
+            }
+            
+            .reaction {
+                font-size: 32px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>九九フラッシュカード</h1>
+        <h1>九九のテスト</h1>
+        
+        <!-- ホームに戻るリンク -->
+        <a href="index.html" class="home-link">トップページに戻る</a>
+        
         <div class="progress">
             <div class="progress-bar" id="progressBar"></div>
         </div>
@@ -135,19 +263,24 @@
                 <div class="question-count">問題 <span id="currentQuestion">1</span>/10</div>
             </div>
             
-            <input type="number" class="answer-input" id="answerInput" placeholder="答え">
+            <input type="number" class="answer-input" id="answerInput" placeholder="こたえ">
             <div class="result" id="result"></div>
             <div class="reaction" id="reaction"></div>
             
-            <button class="button" id="checkButton">答えを確認</button>
-            <button class="button" id="nextButton" style="display: none;">次へ</button>
+            <div class="button-container">
+                <button class="button" id="checkButton">かくにん</button>
+                <button class="button" id="nextButton" style="display: none;">つぎの問題</button>
+            </div>
         </div>
         
         <div class="stats" id="statsArea">
-            <h2>結果</h2>
+            <h2>おつかれさま！</h2>
             <p>10問中 <span id="finalCorrect">0</span> 問正解!</p>
             <div class="reaction" id="finalReaction"></div>
-            <button class="button" id="restartButton">もう一度チャレンジ</button>
+            <div class="button-container">
+                <button class="button" id="restartButton">もういちど</button>
+                <a href="index.html" class="home-link">トップページに戻る</a>
+            </div>
         </div>
     </div>
 
@@ -227,13 +360,13 @@
             answerInput.disabled = true;
             
             if (userAnswer === gameState.currentAnswer) {
-                resultElement.textContent = '正解!';
+                resultElement.textContent = '⭕ せいかい！';
                 resultElement.className = 'result correct';
                 reactionElement.textContent = '😄';
                 gameState.correctCount++;
                 correctCountElement.textContent = gameState.correctCount;
             } else {
-                resultElement.textContent = `不正解! 正解は ${gameState.currentAnswer} です`;
+                resultElement.textContent = `❌ ちがうよ。こたえは ${gameState.currentAnswer} です`;
                 resultElement.className = 'result incorrect';
                 reactionElement.textContent = '😢';
                 gameState.incorrectCount++;
@@ -298,9 +431,27 @@
         // エンターキーで回答
         answerInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                checkAnswer();
+                if (!gameState.hasAnswered) {
+                    checkAnswer();
+                } else if (gameState.currentQuestion < gameState.totalQuestions) {
+                    nextQuestion();
+                }
             }
         });
+
+        // iOSのバーチャルキーボードの挙動対策
+        function adjustViewForKeyboard() {
+            // 少し待ってからスクロール
+            setTimeout(() => {
+                window.scrollTo(0, 0);
+                document.body.scrollTop = 0;
+            }, 300);
+        }
+        
+        answerInput.addEventListener('focus', adjustViewForKeyboard);
+        
+        // iOS上でPWAとして動作する際に役立つスクロール調整
+        window.addEventListener('resize', adjustViewForKeyboard);
 
         // ゲーム開始
         generateQuestion();

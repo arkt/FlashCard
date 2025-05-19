@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>二桁計算フラッシュカード</title>
+    <title>フラッシュカード</title>
     <style>
         body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -20,42 +20,47 @@
         .container {
             width: 90%;
             max-width: 500px;
-            margin: 20px auto;
-            padding: 20px;
+            margin: 10px auto;
+            padding: 15px;
             background-color: white;
             border-radius: 12px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            /* iPhone向けに縦の表示幅を50%に調整 */
+            height: 50vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
         }
         
         h1 {
             color: #2c3e50;
-            font-size: 24px;
-            margin-bottom: 20px;
+            font-size: 20px;
+            margin-bottom: 10px;
         }
         
         .problem-card {
             background-color: #f1c40f;
-            padding: 30px 20px;
+            padding: 20px 15px;
             border-radius: 8px;
-            font-size: 32px;
+            font-size: 28px;
             font-weight: bold;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         
         .answer-section {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         
         input[type="number"] {
-            width: 120px;
-            height: 50px;
-            font-size: 24px;
+            width: 100px;
+            height: 40px;
+            font-size: 20px;
             text-align: center;
             border: 2px solid #ddd;
             border-radius: 8px;
             padding: 5px;
-            margin: 10px 0;
+            margin: 8px 0;
         }
         
         input[type="number"]:focus {
@@ -67,8 +72,8 @@
             background-color: #3498db;
             color: white;
             border: none;
-            padding: 12px 24px;
-            font-size: 18px;
+            padding: 10px 20px;
+            font-size: 16px;
             border-radius: 8px;
             cursor: pointer;
             margin: 5px;
@@ -88,9 +93,9 @@
         }
         
         .feedback {
-            font-size: 20px;
-            margin: 15px 0;
-            min-height: 30px;
+            font-size: 18px;
+            margin: 10px 0;
+            min-height: 25px;
         }
         
         .correct {
@@ -105,37 +110,39 @@
             display: flex;
             justify-content: space-around;
             background-color: #ecf0f1;
-            padding: 15px;
+            padding: 10px;
             border-radius: 8px;
-            margin-top: 20px;
+            margin-top: 10px;
+            flex-shrink: 0;
         }
         
         .stat-box {
-            font-size: 16px;
+            font-size: 14px;
         }
         
         .stat-box span {
             font-weight: bold;
-            font-size: 20px;
+            font-size: 18px;
         }
         
         .operation-switch {
-            margin: 20px 0;
+            margin: 10px 0;
         }
         
         .operation-label {
-            margin: 0 10px;
+            margin: 0 8px;
             font-weight: bold;
+            font-size: 14px;
         }
         
         .question-counter {
             background-color: #34495e;
             color: white;
-            padding: 8px 15px;
+            padding: 6px 12px;
             border-radius: 20px;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             display: inline-block;
         }
         
@@ -163,26 +170,46 @@
         
         .modal-content {
             background-color: white;
-            padding: 30px;
+            padding: 25px;
             border-radius: 12px;
             width: 90%;
-            max-width: 400px;
+            max-width: 350px;
             text-align: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         
         .result-summary {
-            margin: 20px 0;
-            font-size: 18px;
+            margin: 15px 0;
+            font-size: 16px;
             line-height: 1.6;
         }
         
         .result-summary p {
-            margin: 10px 0;
+            margin: 8px 0;
         }
         
         .hidden {
             display: none !important;
+        }
+        
+        /* ホームに戻るリンク */
+        .home-link {
+            display: block;
+            margin: 10px 0;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .home-link:hover {
+            text-decoration: underline;
+        }
+        
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
         }
         
         /* iPhoneでのフォームズーム防止 */
@@ -190,25 +217,37 @@
             input[type="number"] {
                 font-size: 16px;
             }
+            
+            .container {
+                height: 50vh;
+                padding: 10px;
+            }
         }
         
         /* iPhoneに適した要素サイズ */
         @media screen and (max-width: 480px) {
             .problem-card {
-                font-size: 28px;
-                padding: 20px 15px;
+                font-size: 24px;
+                padding: 15px 10px;
             }
             
             button {
-                padding: 10px 20px;
-                font-size: 16px;
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+            
+            h1 {
+                font-size: 18px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>二桁計算フラッシュカード</h1>
+        <h1>二桁の足算・引算</h1>
+        
+        <!-- ホームに戻るリンク -->
+        <a href="index.html" class="home-link">トップページに戻る</a>
         
         <div class="operation-switch">
             <label class="operation-label">
@@ -230,7 +269,7 @@
         
         <div class="answer-section">
             <input type="number" id="answer-input" placeholder="こたえ" min="0" max="999">
-            <div>
+            <div class="button-container">
                 <button id="check-btn">かくにん</button>
                 <button id="next-btn" class="next-btn hidden">つぎの問題</button>
                 <button id="finish-btn" class="finish-btn">おわる</button>
@@ -257,7 +296,10 @@
                 <p>正解: <span id="summary-correct">0</span>問</p>
                 <p>正解率: <span id="summary-percentage">0</span>%</p>
             </div>
-            <button id="restart-btn">もういちど</button>
+            <div class="button-container">
+                <button id="restart-btn">もういちど</button>
+                <a href="index.html" class="home-link">トップページに戻る</a>
+            </div>
         </div>
     </div>
     

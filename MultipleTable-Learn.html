@@ -79,11 +79,25 @@
             font-size: 0.9rem;
             color: #666;
         }
+        /* ホームに戻るリンク */
+        .home-link {
+            display: block;
+            margin: 15px 0;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .home-link:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>九九の練習</h1>
+        <!-- ホームに戻るリンク -->
+        <a href="index.html" class="home-link">トップページに戻る</a>
         
         <div class="controls">
             <select id="table-select">
@@ -101,7 +115,7 @@
             <button id="stop-btn" disabled>停止</button>
         </div>
         
-        <div class="display" id="display">ここに表示されます</div>
+        <div class="display" id="display"></div>
         
         <div class="progress">
             <div class="progress-bar" id="progress-bar"></div>
@@ -124,17 +138,25 @@
             let interval;
             let currentNumber = 1;
             let selectedTable = 1;
+            let isPaused = false; // 一時停止状態を追跡する変数
             
             // 開始ボタンのクリックイベント
             startBtn.addEventListener('click', function() {
-                selectedTable = parseInt(tableSelect.value);
-                currentNumber = 1;
+                // 新しい段を選択した場合はリセット、停止後の再開の場合は現在の値を維持
+                if (!isPaused) {
+                    selectedTable = parseInt(tableSelect.value);
+                    currentNumber = 1;
+                }
+                
                 startDisplay();
                 
                 // ボタンの有効/無効を切り替え
                 startBtn.disabled = true;
                 stopBtn.disabled = false;
                 tableSelect.disabled = true;
+                
+                // 一時停止フラグをリセット
+                isPaused = false;
                 
                 info.textContent = `${selectedTable}の段を表示中...`;
             });
@@ -146,14 +168,19 @@
                 // ボタンの有効/無効を切り替え
                 startBtn.disabled = false;
                 stopBtn.disabled = true;
-                tableSelect.disabled = false;
                 
-                info.textContent = '「開始」を押すと、選択した段の九九が順番に表示されます。';
+                // tableSelectは無効のままにして現在の段を維持
+                tableSelect.disabled = true;
+                
+                // 一時停止フラグを設定
+                isPaused = true;
+                
+                info.textContent = '「開始」を押すと、停止した地点から再開します。';
             });
             
             // 表示を開始する
             function startDisplay() {
-                // 最初の計算を表示
+                // 現在の計算を表示
                 showCurrentCalculation();
                 
                 // 3秒ごとに次の計算を表示
@@ -170,6 +197,9 @@
                         startBtn.disabled = false;
                         stopBtn.disabled = true;
                         tableSelect.disabled = false;
+                        
+                        // 一時停止フラグをリセット
+                        isPaused = false;
                         
                         info.textContent = '「開始」を押すと、選択した段の九九が順番に表示されます。';
                         return;

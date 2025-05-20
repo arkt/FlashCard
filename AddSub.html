@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>フラッシュカード</title>
+    <title>足し算・引き算</title>
     <style>
         body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -46,6 +46,7 @@
             font-weight: bold;
             margin-bottom: 15px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
         
         .answer-section {
@@ -113,6 +114,7 @@
             padding: 10px;
             border-radius: 8px;
             margin-top: 10px;
+            margin-bottom: 10px;
             flex-shrink: 0;
         }
         
@@ -142,8 +144,9 @@
             border-radius: 20px;
             font-size: 14px;
             font-weight: bold;
-            margin-bottom: 10px;
-            display: inline-block;
+            position: absolute;
+            top: 8px;
+            right: 8px;
         }
         
         .finish-btn {
@@ -152,6 +155,22 @@
         
         .finish-btn:hover {
             background-color: #c0392b;
+        }
+        
+        /* プログレスバー */
+        .progress {
+            margin-bottom: 10px;
+            height: 15px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: #4caf50;
+            width: 0%;
+            transition: width 0.3s;
         }
         
         /* モーダルスタイル */
@@ -261,10 +280,19 @@
             </label>
         </div>
         
-        <div class="question-counter" id="question-counter">第 1 問</div>
+        <div class="progress">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
         
-        <div class="problem-card" id="problem">
-            <!-- ここに問題が表示されます -->
+        <div class="stats">
+            <div class="stat-box">正解: <span id="correct-count">0</span></div>
+            <div class="stat-box">不正解: <span id="incorrect-count">0</span></div>
+            <div class="stat-box">問題数: <span id="current-question">1</span>/10</div>
+        </div>
+        
+        <div class="problem-card" id="problem-card">
+            <span id="problem-text"></span>
+            <div class="question-counter" id="question-counter">第 1/10 問</div>
         </div>
         
         <div class="answer-section">
@@ -278,12 +306,6 @@
         
         <div class="feedback" id="feedback">
             <!-- ここに正解・不正解のフィードバックが表示されます -->
-        </div>
-        
-        <div class="stats">
-            <div class="stat-box">正解: <span id="correct-count">0</span></div>
-            <div class="stat-box">不正解: <span id="incorrect-count">0</span></div>
-            <div class="stat-box">挑戦数: <span id="total-count">0</span></div>
         </div>
     </div>
     
@@ -309,10 +331,11 @@
         let correctCount = 0;
         let incorrectCount = 0;
         let questionNumber = 1;
+        const totalQuestions = 10; // 問題数を10問に固定
         let isAnswerChecked = false;
         
         // 要素への参照
-        const problemElement = document.getElementById('problem');
+        const problemTextElement = document.getElementById('problem-text');
         const answerInput = document.getElementById('answer-input');
         const checkButton = document.getElementById('check-btn');
         const nextButton = document.getElementById('next-btn');
@@ -320,7 +343,7 @@
         const feedbackElement = document.getElementById('feedback');
         const correctCountElement = document.getElementById('correct-count');
         const incorrectCountElement = document.getElementById('incorrect-count');
-        const totalCountElement = document.getElementById('total-count');
+        const currentQuestionElement = document.getElementById('current-question');
         const operationRadios = document.getElementsByName('operation');
         const questionCounterElement = document.getElementById('question-counter');
         const finishModal = document.getElementById('finish-modal');
@@ -328,6 +351,13 @@
         const summaryTotal = document.getElementById('summary-total');
         const summaryCorrect = document.getElementById('summary-correct');
         const summaryPercentage = document.getElementById('summary-percentage');
+        const progressBar = document.getElementById('progress-bar');
+        
+        // プログレスバーの更新
+        function updateProgressBar() {
+            const progress = ((questionNumber - 1) / totalQuestions) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
         
         // 問題を生成する関数
         function generateProblem() {
@@ -372,10 +402,11 @@
             }
             
             // 問題を表示
-            problemElement.textContent = `${currentProblem.num1} ${currentProblem.operator} ${currentProblem.num2} = ?`;
+            problemTextElement.textContent = `${currentProblem.num1} ${currentProblem.operator} ${currentProblem.num2} = ?`;
             
-            // 問題番号を表示
-            questionCounterElement.textContent = `第 ${questionNumber} 問`;
+            // 問題カウンターを更新
+            questionCounterElement.textContent = `第 ${questionNumber}/${totalQuestions} 問`;
+            currentQuestionElement.textContent = questionNumber;
             
             // UIをリセット
             answerInput.value = '';
@@ -385,6 +416,9 @@
             checkButton.classList.remove('hidden');
             nextButton.classList.add('hidden');
             isAnswerChecked = false;
+            
+            // 進捗バーを更新
+            updateProgressBar();
         }
         
         // 答えをチェックする関数
@@ -399,9 +433,7 @@
                 return;
             }
             
-            // 挑戦数を増やす
-            const totalCount = correctCount + incorrectCount + 1;
-            totalCountElement.textContent = totalCount;
+            isAnswerChecked = true;
             
             if (userAnswer === currentProblem.answer) {
                 feedbackElement.textContent = '⭕ せいかい！';
@@ -409,15 +441,21 @@
                 correctCount++;
                 correctCountElement.textContent = correctCount;
             } else {
-                feedbackElement.textContent = `❌ ちがうよ。こたえは ${currentProblem.answer} です。`;
+                feedbackElement.textContent = `❌ ちがうよ。こたえは ${currentProblem.answer} だよ。`;
                 feedbackElement.className = 'feedback incorrect';
                 incorrectCount++;
                 incorrectCountElement.textContent = incorrectCount;
             }
             
-            isAnswerChecked = true;
             checkButton.classList.add('hidden');
-            nextButton.classList.remove('hidden');
+            
+            // 最終問題かどうか確認
+            if (questionNumber < totalQuestions) {
+                nextButton.classList.remove('hidden');
+            } else {
+                // 最後の問題が終わったら、次の問題ボタンを表示せず終了
+                setTimeout(finishQuiz, 1000);
+            }
         }
         
         // 次の問題に進む関数
@@ -428,7 +466,7 @@
         
         // 終了処理を行う関数
         function finishQuiz() {
-            const totalCount = correctCount + incorrectCount;
+            const totalCount = questionNumber; // 現在の問題番号が合計問題数
             const percentage = totalCount > 0 ? Math.round((correctCount / totalCount) * 100) : 0;
             
             // 結果サマリーを更新
@@ -450,7 +488,7 @@
             // カウンターをリセット
             correctCountElement.textContent = '0';
             incorrectCountElement.textContent = '0';
-            totalCountElement.textContent = '0';
+            currentQuestionElement.textContent = '1';
             
             // モーダルを非表示
             finishModal.classList.add('hidden');
@@ -464,7 +502,7 @@
             if (event.key === 'Enter') {
                 if (!isAnswerChecked) {
                     checkAnswer();
-                } else {
+                } else if (questionNumber < totalQuestions) {
                     nextQuestion();
                 }
             }

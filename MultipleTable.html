@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>九九フラッシュカードアプリ</title>
+    <title>九九</title>
     <style>
         body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -67,9 +67,24 @@
             transition: width 0.3s;
         }
         
-        .score {
-            font-size: 14px;
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background-color: #ecf0f1;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
             margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+        
+        .stat-box {
+            font-size: 14px;
+        }
+        
+        .stat-box span {
+            font-weight: bold;
+            font-size: 18px;
         }
         
         .card {
@@ -93,7 +108,6 @@
             top: 8px;
             right: 8px;
             font-size: 12px;
-            color: rgba(0, 0, 0, 0.6);
             background-color: #34495e;
             color: white;
             padding: 4px 8px;
@@ -139,12 +153,20 @@
             background-color: #2980b9;
         }
         
-        #nextButton {
+        .next-button {
             background-color: #2ecc71;
         }
         
-        #nextButton:hover {
+        .next-button:hover {
             background-color: #27ae60;
+        }
+        
+        .finish-button {
+            background-color: #e74c3c;
+        }
+        
+        .finish-button:hover {
+            background-color: #c0392b;
         }
         
         .result {
@@ -170,17 +192,6 @@
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
-        }
-        
-        .stats {
-            margin-top: 15px;
-            display: none;
-            text-align: center;
-        }
-        
-        .stats h2 {
-            font-size: 20px;
-            margin-bottom: 10px;
         }
         
         .hidden {
@@ -209,6 +220,16 @@
             max-width: 350px;
             text-align: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .result-summary {
+            margin: 15px 0;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .result-summary p {
+            margin: 8px 0;
         }
         
         /* iPhoneでのフォームズーム防止 */
@@ -255,28 +276,40 @@
         <div class="progress">
             <div class="progress-bar" id="progressBar"></div>
         </div>
-        <div class="score">正解: <span id="correctCount">0</span> / 不正解: <span id="incorrectCount">0</span></div>
+        
+        <div class="stats">
+            <div class="stat-box">正解: <span id="correctCount">0</span></div>
+            <div class="stat-box">不正解: <span id="incorrectCount">0</span></div>
+            <div class="stat-box">問題数: <span id="currentQuestion">1</span>/10</div>
+        </div>
         
         <div id="game-area">
             <div class="card" id="questionCard">
                 <span id="question"></span>
-                <div class="question-count">問題 <span id="currentQuestion">1</span>/10</div>
+                <div class="question-count" id="question-counter">問題 1/10</div>
             </div>
             
             <input type="number" class="answer-input" id="answerInput" placeholder="こたえ">
-            <div class="result" id="result"></div>
-            <div class="reaction" id="reaction"></div>
-            
             <div class="button-container">
                 <button class="button" id="checkButton">かくにん</button>
-                <button class="button" id="nextButton" style="display: none;">つぎの問題</button>
+                <button class="button next-button hidden" id="nextButton">つぎの問題</button>
+                <button class="button finish-button" id="finishButton">おわる</button>
             </div>
+            
+            <div class="result" id="result"></div>
+            <div class="reaction" id="reaction"></div>
         </div>
-        
-        <div class="stats" id="statsArea">
+    </div>
+    
+    <!-- 終了モーダル -->
+    <div id="finish-modal" class="modal hidden">
+        <div class="modal-content">
             <h2>おつかれさま！</h2>
-            <p>10問中 <span id="finalCorrect">0</span> 問正解!</p>
-            <div class="reaction" id="finalReaction"></div>
+            <div class="result-summary">
+                <p>チャレンジした問題: <span id="summary-total">10</span>問</p>
+                <p>正解: <span id="summary-correct">0</span>問</p>
+                <p>正解率: <span id="summary-percentage">0</span>%</p>
+            </div>
             <div class="button-container">
                 <button class="button" id="restartButton">もういちど</button>
                 <a href="index.html" class="home-link">トップページに戻る</a>
@@ -303,13 +336,16 @@
         const correctCountElement = document.getElementById('correctCount');
         const incorrectCountElement = document.getElementById('incorrectCount');
         const currentQuestionElement = document.getElementById('currentQuestion');
+        const questionCounterElement = document.getElementById('question-counter');
         const progressBar = document.getElementById('progressBar');
         const checkButton = document.getElementById('checkButton');
         const nextButton = document.getElementById('nextButton');
+        const finishButton = document.getElementById('finishButton');
         const gameArea = document.getElementById('game-area');
-        const statsArea = document.getElementById('statsArea');
-        const finalCorrectElement = document.getElementById('finalCorrect');
-        const finalReactionElement = document.getElementById('finalReaction');
+        const finishModal = document.getElementById('finish-modal');
+        const summaryTotal = document.getElementById('summary-total');
+        const summaryCorrect = document.getElementById('summary-correct');
+        const summaryPercentage = document.getElementById('summary-percentage');
         const restartButton = document.getElementById('restartButton');
 
         // 新しい問題を生成
@@ -322,6 +358,10 @@
             gameState.currentAnswer = answer;
             gameState.hasAnswered = false;
             
+            // 問題カウンター表示を更新
+            questionCounterElement.textContent = `問題 ${gameState.currentQuestion}/${gameState.totalQuestions}`;
+            currentQuestionElement.textContent = gameState.currentQuestion;
+            
             // UI更新
             answerInput.value = '';
             answerInput.disabled = false;
@@ -329,10 +369,9 @@
             resultElement.className = 'result';
             reactionElement.textContent = '';
             checkButton.style.display = 'inline-block';
-            nextButton.style.display = 'none';
+            nextButton.classList.add('hidden');
             
             // 進捗更新
-            currentQuestionElement.textContent = gameState.currentQuestion;
             updateProgressBar();
             
             // 入力フォーカス
@@ -374,7 +413,7 @@
             checkButton.style.display = 'none';
             
             if (gameState.currentQuestion < gameState.totalQuestions) {
-                nextButton.style.display = 'inline-block';
+                nextButton.classList.remove('hidden');
             } else {
                 // ゲーム終了
                 setTimeout(showFinalStats, 1000);
@@ -389,21 +428,19 @@
 
         // 最終結果の表示
         function showFinalStats() {
-            gameArea.style.display = 'none';
-            statsArea.style.display = 'block';
+            const percentage = Math.round((gameState.correctCount / gameState.totalQuestions) * 100);
             
-            finalCorrectElement.textContent = gameState.correctCount;
+            // 結果サマリーを更新
+            summaryCorrect.textContent = gameState.correctCount;
+            summaryPercentage.textContent = percentage;
             
-            // 最終的な反応
-            if (gameState.correctCount === gameState.totalQuestions) {
-                finalReactionElement.textContent = '🏆';
-            } else if (gameState.correctCount >= 7) {
-                finalReactionElement.textContent = '🎉';
-            } else if (gameState.correctCount >= 5) {
-                finalReactionElement.textContent = '👍';
-            } else {
-                finalReactionElement.textContent = '💪';
-            }
+            // モーダルを表示
+            finishModal.classList.remove('hidden');
+        }
+
+        // おわるボタンで強制終了
+        function finishQuiz() {
+            showFinalStats();
         }
 
         // ゲームをリスタート
@@ -414,9 +451,9 @@
             
             correctCountElement.textContent = '0';
             incorrectCountElement.textContent = '0';
+            currentQuestionElement.textContent = '1';
             
-            gameArea.style.display = 'block';
-            statsArea.style.display = 'none';
+            finishModal.classList.add('hidden');
             
             generateQuestion();
         }
@@ -424,6 +461,7 @@
         // イベントリスナー
         checkButton.addEventListener('click', checkAnswer);
         nextButton.addEventListener('click', nextQuestion);
+        finishButton.addEventListener('click', finishQuiz);
         restartButton.addEventListener('click', restartGame);
         
         // エンターキーで回答

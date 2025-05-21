@@ -25,8 +25,8 @@
             background-color: white;
             border-radius: 12px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            /* iPhone向けに縦の表示幅を50%に調整 */
-            height: 48vh;
+            /* 縦幅を10%小さくする (48vh → 43.2vh) */
+            height: 43.2vh;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
@@ -34,34 +34,38 @@
         
         h1 {
             color: #2c3e50;
-            font-size: 20px;
-            margin-bottom: 10px;
+            /* フォントサイズを10%小さくする (20px → 18px) */
+            font-size: 18px;
+            margin-bottom: 9px; /* 10% 減 */
         }
         
         .problem-card {
             background-color: #f1c40f;
-            padding: 20px 15px;
+            /* パディングを10%小さくする */
+            padding: 18px 13.5px;
             border-radius: 8px;
-            font-size: 28px;
+            /* フォントサイズを10%小さくする */
+            font-size: 25.2px;
             font-weight: bold;
-            margin-bottom: 15px;
+            margin-bottom: 13.5px; /* 10% 減 */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             position: relative;
         }
         
         .answer-section {
-            margin-bottom: 15px;
+            margin-bottom: 13.5px; /* 10% 減 */
         }
         
         input[type="number"] {
-            width: 100px;
-            height: 40px;
-            font-size: 20px;
+            /* サイズを10%小さくする */
+            width: 90px;
+            height: 36px;
+            font-size: 18px;
             text-align: center;
             border: 2px solid #ddd;
-            border-radius: 8px;
-            padding: 5px;
-            margin: 8px 0;
+            border-radius: 7px; /* 10% 減 */
+            padding: 4.5px; /* 10% 減 */
+            margin: 7.2px 0; /* 10% 減 */
         }
         
         input[type="number"]:focus {
@@ -73,11 +77,13 @@
             background-color: #3498db;
             color: white;
             border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            border-radius: 8px;
+            /* パディングを10%小さくする */
+            padding: 9px 18px;
+            /* フォントサイズを10%小さくする */
+            font-size: 14.4px;
+            border-radius: 7px; /* 10% 減 */
             cursor: pointer;
-            margin: 5px;
+            margin: 4.5px; /* 10% 減 */
             transition: background-color 0.3s;
         }
         
@@ -94,9 +100,10 @@
         }
         
         .feedback {
-            font-size: 18px;
-            margin: 10px 0;
-            min-height: 25px;
+            /* フォントサイズを10%小さくする */
+            font-size: 16.2px;
+            margin: 9px 0; /* 10% 減 */
+            min-height: 22.5px; /* 10% 減 */
         }
         
         .correct {
@@ -111,42 +118,48 @@
             display: flex;
             justify-content: space-around;
             background-color: #ecf0f1;
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 10px;
-            margin-bottom: 10px;
+            padding: 9px; /* 10% 減 */
+            border-radius: 7px; /* 10% 減 */
+            margin-top: 9px; /* 10% 減 */
+            margin-bottom: 9px; /* 10% 減 */
             flex-shrink: 0;
         }
         
         .stat-box {
-            font-size: 14px;
+            /* フォントサイズを10%小さくする */
+            font-size: 12.6px;
         }
         
         .stat-box span {
             font-weight: bold;
-            font-size: 18px;
+            /* フォントサイズを10%小さくする */
+            font-size: 16.2px;
         }
         
         .operation-switch {
-            margin: 10px 0;
+            margin: 9px 0; /* 10% 減 */
         }
         
         .operation-label {
-            margin: 0 8px;
+            margin: 0 7.2px; /* 10% 減 */
             font-weight: bold;
-            font-size: 14px;
+            /* フォントサイズを10%小さくする */
+            font-size: 12.6px;
         }
         
         .question-counter {
             background-color: #34495e;
             color: white;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 14px;
+            padding: 5.4px 10.8px; /* 10% 減 */
+            border-radius: 18px; /* 10% 減 */
+            /* フォントサイズを10%小さくする */
+            font-size: 12.6px;
             font-weight: bold;
+            /* 問題番号の位置変更: 右上から右側中央に */
             position: absolute;
-            top: 8px;
+            top: 50%;
             right: 8px;
+            transform: translateY(-50%);
         }
         
         .finish-btn {
@@ -159,10 +172,10 @@
         
         /* プログレスバー */
         .progress {
-            margin-bottom: 10px;
-            height: 15px;
+            margin-bottom: 9px; /* 10% 減 */
+            height: 13.5px; /* 10% 減 */
             background-color: #e0e0e0;
-            border-radius: 10px;
+            border-radius: 9px; /* 10% 減 */
             overflow: hidden;
         }
         
@@ -189,8 +202,8 @@
         
         .modal-content {
             background-color: white;
-            padding: 25px;
-            border-radius: 12px;
+            padding: 22.5px; /* 10% 減 */
+            border-radius: 10.8px; /* 10% 減 */
             width: 90%;
             max-width: 350px;
             text-align: center;
@@ -198,13 +211,14 @@
         }
         
         .result-summary {
-            margin: 15px 0;
-            font-size: 16px;
-            line-height: 1.6;
+            margin: 13.5px 0; /* 10% 減 */
+            /* フォントサイズを10%小さくする */
+            font-size: 14.4px;
+            line-height: 1.44; /* 10% 減 */
         }
         
         .result-summary p {
-            margin: 8px 0;
+            margin: 7.2px 0; /* 10% 減 */
         }
         
         .hidden {
@@ -214,11 +228,12 @@
         /* ホームに戻るリンク */
         .home-link {
             display: block;
-            margin: 10px 0;
+            margin: 9px 0; /* 10% 減 */
             color: #3498db;
             text-decoration: none;
             font-weight: bold;
-            font-size: 14px;
+            /* フォントサイズを10%小さくする */
+            font-size: 12.6px;
         }
         
         .home-link:hover {
@@ -234,29 +249,33 @@
         /* iPhoneでのフォームズーム防止 */
         @media screen and (max-width: 768px) {
             input[type="number"] {
-                font-size: 16px;
+                /* フォントサイズを10%小さくする */
+                font-size: 14.4px;
             }
             
             .container {
-                height: 50vh;
-                padding: 10px;
+                height: 45vh; /* 10% 減 */
+                padding: 9px; /* 10% 減 */
             }
         }
         
         /* iPhoneに適した要素サイズ */
         @media screen and (max-width: 480px) {
             .problem-card {
-                font-size: 24px;
-                padding: 15px 10px;
+                /* フォントサイズを10%小さくする */
+                font-size: 21.6px;
+                padding: 13.5px 9px; /* 10% 減 */
             }
             
             button {
-                padding: 8px 16px;
-                font-size: 14px;
+                padding: 7.2px 14.4px; /* 10% 減 */
+                /* フォントサイズを10%小さくする */
+                font-size: 12.6px;
             }
             
             h1 {
-                font-size: 18px;
+                /* フォントサイズを10%小さくする */
+                font-size: 16.2px;
             }
         }
     </style>

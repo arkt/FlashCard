@@ -20,13 +20,13 @@
         .container {
             width: 90%;
             max-width: 500px;
-            margin: 10px auto;
-            padding: 15px;
+            margin: 5px auto;
+            padding: 10px;
             background-color: white;
             border-radius: 12px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            /* 縦幅を10%小さくする (48vh → 43.2vh) */
-            height: 55.2vh;
+            /* 縦幅をさらに小さくして画面に収める */
+            height: 75vh;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
@@ -34,38 +34,34 @@
         
         h1 {
             color: #2c3e50;
-            /* フォントサイズを10%小さくする (20px → 18px) */
-            font-size: 18px;
-            margin-bottom: 9px; /* 10% 減 */
+            font-size: 16px;
+            margin-bottom: 5px;
         }
         
         .problem-card {
             background-color: #f1c40f;
-            /* パディングを10%小さくする */
-            padding: 18px 13.5px;
+            padding: 12px 10px;
             border-radius: 8px;
-            /* フォントサイズを10%小さくする */
-            font-size: 25.2px;
+            font-size: 22px;
             font-weight: bold;
-            margin-bottom: 13.5px; /* 10% 減 */
+            margin-bottom: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             position: relative;
         }
         
         .answer-section {
-            margin-bottom: 13.5px; /* 10% 減 */
+            margin-bottom: 8px;
         }
         
         input[type="number"] {
-            /* サイズを10%小さくする */
-            width: 90px;
-            height: 36px;
-            font-size: 18px;
+            width: 80px;
+            height: 32px;
+            font-size: 16px;
             text-align: center;
             border: 2px solid #ddd;
-            border-radius: 7px; /* 10% 減 */
-            padding: 4.5px; /* 10% 減 */
-            margin: 7.2px 0; /* 10% 減 */
+            border-radius: 6px;
+            padding: 3px;
+            margin: 5px 0;
         }
         
         input[type="number"]:focus {
@@ -77,13 +73,11 @@
             background-color: #3498db;
             color: white;
             border: none;
-            /* パディングを10%小さくする */
-            padding: 9px 18px;
-            /* フォントサイズを10%小さくする */
-            font-size: 14.4px;
-            border-radius: 7px; /* 10% 減 */
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 6px;
             cursor: pointer;
-            margin: 4.5px; /* 10% 減 */
+            margin: 3px;
             transition: background-color 0.3s;
         }
         
@@ -100,10 +94,9 @@
         }
         
         .feedback {
-            /* フォントサイズを10%小さくする */
-            font-size: 16.2px;
-            margin: 9px 0; /* 10% 減 */
-            min-height: 22.5px; /* 10% 減 */
+            font-size: 14px;
+            margin: 5px 0;
+            min-height: 18px;
         }
         
         .correct {
@@ -118,44 +111,39 @@
             display: flex;
             justify-content: space-around;
             background-color: #ecf0f1;
-            padding: 9px; /* 10% 減 */
-            border-radius: 7px; /* 10% 減 */
-            margin-top: 9px; /* 10% 減 */
-            margin-bottom: 9px; /* 10% 減 */
+            padding: 6px;
+            border-radius: 6px;
+            margin-top: 5px;
+            margin-bottom: 5px;
             flex-shrink: 0;
         }
         
         .stat-box {
-            /* フォントサイズを10%小さくする */
-            font-size: 12.6px;
+            font-size: 10px;
         }
         
         .stat-box span {
             font-weight: bold;
-            /* フォントサイズを10%小さくする */
-            font-size: 16.2px;
+            font-size: 13px;
         }
         
         .operation-switch {
-            margin: 9px 0; /* 10% 減 */
+            margin: 5px 0;
         }
         
         .operation-label {
-            margin: 0 7.2px; /* 10% 減 */
+            margin: 0 5px;
             font-weight: bold;
-            /* フォントサイズを10%小さくする */
-            font-size: 12.6px;
+            font-size: 11px;
         }
         
         .question-counter {
             background-color: #34495e;
             color: white;
-            padding: 5.4px 10.8px; /* 10% 減 */
-            border-radius: 18px; /* 10% 減 */
-            /* フォントサイズを10%小さくする */
-            font-size: 12.6px;
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 10px;
             font-weight: bold;
-            /* 問題番号の位置変更: 右上から右側中央に */
             position: absolute;
             top: 50%;
             right: 8px;
@@ -172,10 +160,10 @@
         
         /* プログレスバー */
         .progress {
-            margin-bottom: 9px; /* 10% 減 */
-            height: 13.5px; /* 10% 減 */
+            margin-bottom: 5px;
+            height: 10px;
             background-color: #e0e0e0;
-            border-radius: 9px; /* 10% 減 */
+            border-radius: 7px;
             overflow: hidden;
         }
         
@@ -202,8 +190,8 @@
         
         .modal-content {
             background-color: white;
-            padding: 22.5px; /* 10% 減 */
-            border-radius: 10.8px; /* 10% 減 */
+            padding: 20px;
+            border-radius: 10px;
             width: 90%;
             max-width: 350px;
             text-align: center;
@@ -211,14 +199,13 @@
         }
         
         .result-summary {
-            margin: 13.5px 0; /* 10% 減 */
-            /* フォントサイズを10%小さくする */
-            font-size: 14.4px;
-            line-height: 1.44; /* 10% 減 */
+            margin: 10px 0;
+            font-size: 13px;
+            line-height: 1.3;
         }
         
         .result-summary p {
-            margin: 7.2px 0; /* 10% 減 */
+            margin: 5px 0;
         }
         
         .hidden {
@@ -228,12 +215,11 @@
         /* ホームに戻るリンク */
         .home-link {
             display: block;
-            margin: 9px 0; /* 10% 減 */
+            margin: 5px 0;
             color: #3498db;
             text-decoration: none;
             font-weight: bold;
-            /* フォントサイズを10%小さくする */
-            font-size: 12.6px;
+            font-size: 11px;
         }
         
         .home-link:hover {
@@ -249,33 +235,68 @@
         /* iPhoneでのフォームズーム防止 */
         @media screen and (max-width: 768px) {
             input[type="number"] {
-                /* フォントサイズを10%小さくする */
-                font-size: 14.4px;
+                font-size: 16px; /* ズーム防止のため16px以上を維持 */
             }
             
             .container {
-                height: 45vh; /* 10% 減 */
-                padding: 9px; /* 10% 減 */
+                height: 80vh; /* モバイルで適切な高さに調整 */
+                padding: 8px;
+                margin: 2px auto;
             }
         }
         
         /* iPhoneに適した要素サイズ */
         @media screen and (max-width: 480px) {
             .problem-card {
-                /* フォントサイズを10%小さくする */
-                font-size: 21.6px;
-                padding: 13.5px 9px; /* 10% 減 */
+                font-size: 20px;
+                padding: 10px 8px;
             }
             
             button {
-                padding: 7.2px 14.4px; /* 10% 減 */
-                /* フォントサイズを10%小さくする */
-                font-size: 12.6px;
+                padding: 6px 10px;
+                font-size: 11px;
             }
             
             h1 {
-                /* フォントサイズを10%小さくする */
-                font-size: 16.2px;
+                font-size: 14px;
+            }
+            
+            .container {
+                height: 85vh; /* さらに小さい画面での調整 */
+            }
+        }
+        
+        /* iPhone SE など非常に小さい画面用 */
+        @media screen and (max-height: 680px) {
+            .container {
+                height: 90vh; /* 小さい画面では90%まで使用 */
+                padding: 5px;
+            }
+            
+            .problem-card {
+                font-size: 18px;
+                padding: 8px 6px;
+                margin-bottom: 6px;
+            }
+            
+            .stats {
+                padding: 4px;
+                margin: 3px 0;
+            }
+            
+            .operation-switch {
+                margin: 3px 0;
+            }
+            
+            button {
+                padding: 5px 8px;
+                font-size: 10px;
+                margin: 2px;
+            }
+            
+            input[type="number"] {
+                height: 28px;
+                font-size: 16px;
             }
         }
     </style>
@@ -539,19 +560,46 @@
         // 初期問題を生成
         generateProblem();
         
-        // iOSのバーチャルキーボードの挙動対策
+        // iOSのバーチャルキーボードの挙動対策を強化
         function adjustViewForKeyboard() {
-            // 少し待ってからスクロール
+            // より短い遅延でスクロール調整
             setTimeout(() => {
-                window.scrollTo(0, 0);
-                document.body.scrollTop = 0;
+                // 入力フィールドが見えるようにスクロール
+                answerInput.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center',
+                    inline: 'nearest'
+                });
+            }, 100);
+            
+            // さらに追加の調整
+            setTimeout(() => {
+                if (window.visualViewport) {
+                    // Visual Viewport APIが利用可能な場合
+                    const viewport = window.visualViewport;
+                    const offsetTop = viewport.offsetTop;
+                    if (offsetTop > 0) {
+                        window.scrollBy(0, -offsetTop);
+                    }
+                }
             }, 300);
         }
         
         answerInput.addEventListener('focus', adjustViewForKeyboard);
+        answerInput.addEventListener('input', adjustViewForKeyboard);
         
-        // iOS上でPWAとして動作する際に役立つスクロール調整
-        window.addEventListener('resize', adjustViewForKeyboard);
+        // Visual Viewport APIのサポート
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', () => {
+                // キーボードが表示/非表示された時の調整
+                setTimeout(adjustViewForKeyboard, 100);
+            });
+        }
+        
+        // 従来のresize イベントも保持
+        window.addEventListener('resize', () => {
+            setTimeout(adjustViewForKeyboard, 100);
+        });
     </script>
 </body>
 </html>
